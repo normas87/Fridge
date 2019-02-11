@@ -1,12 +1,20 @@
 package com.normas.Fridge.foodProducts;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.normas.Fridge.component.Meal;
+import com.normas.Fridge.recipe.Recipe;
+import com.normas.Fridge.recipe.RecipeSerializer;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class FoodProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    long id;
     private String name;
     private double price;
     private double kcal;
@@ -15,8 +23,30 @@ public class FoodProduct {
     private double proteins;
     private boolean vege;
 
+
+    @JsonIgnore
+    @ManyToMany
+    private List<Recipe> recipes = new ArrayList<>();
+
+    @ManyToMany
+    private List<Meal> mels = new ArrayList<>();
+
+    public List<Recipe> getRecipes() {
+        return recipes;
+    }
+
+    public void setRecipes(List<Recipe> recipes) {
+        this.recipes = recipes;
+    }
+
+    public void addFoodProduct(Recipe recipe) {
+        this.recipes.add(recipe);
+    }
+
+
     public FoodProduct() {
     }
+
 
     public long getId() {
         return id;

@@ -1,20 +1,48 @@
 package com.normas.Fridge.recipe;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.normas.Fridge.component.Meal;
+import com.normas.Fridge.foodProducts.FoodProduct;
+import com.normas.Fridge.foodProducts.FoodProductSerializer;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
-//@Entity
+@Entity
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    long id;
     private String name;
-    private List products;
     private String timeToPreparation;
     private int people;
     private String description;
-    private List nutritionalValues;
 
+    @JsonSerialize(using = FoodProductSerializer.class)
+    @ManyToMany
+    private List<FoodProduct> foodProducts;
+
+
+    @ManyToMany
+    private List<Meal> mels = new ArrayList<>();
+
+
+    public void setProducts(List<FoodProduct> products) {
+        this.foodProducts = products;
+    }
+
+    public List<FoodProduct> getFoodProducts() {
+        return foodProducts;
+    }
+
+    public void setFoodProducts(List<FoodProduct> foodProducts) {
+        this.foodProducts = foodProducts;
+    }
+
+    public void addFoodProduct(FoodProduct foodProduct) {
+        this.foodProducts.add(foodProduct);
+    }
 
     public Recipe() {
     }
@@ -33,14 +61,6 @@ public class Recipe {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List getProducts() {
-        return products;
-    }
-
-    public void setProducts(List products) {
-        this.products = products;
     }
 
     public String getTimeToPreparation() {
@@ -65,13 +85,5 @@ public class Recipe {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List getNutritionalValues() {
-        return nutritionalValues;
-    }
-
-    public void setNutritionalValues(List nutritionalValues) {
-        this.nutritionalValues = nutritionalValues;
     }
 }
